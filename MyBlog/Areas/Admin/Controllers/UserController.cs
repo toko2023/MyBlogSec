@@ -28,7 +28,12 @@ namespace MyBlog.Areas.Admin.Controllers
         [HttpGet("Login")]
         public IActionResult Login()
         {
-            return View(new LoginVM());
+            if(!HttpContext.User.Identity!.IsAuthenticated)
+            {
+                return View(new LoginVM());
+            }
+            return RedirectToAction("Index", "User", new { area = "Admin" });
+            
         }
 
         
@@ -49,8 +54,16 @@ namespace MyBlog.Areas.Admin.Controllers
                 return View(vm);
             }
             await _signInManager.PasswordSignInAsync(vm.Username, vm.Password, vm.RememberMe, true);
-            _notification.Success("Амжилттай нэвтэрлээ");
+            _notification.Success("Та амжилттай нэвтэрлээ");
             return RedirectToAction("Index", "User", new {area = "Admin"});
+        }
+
+        [HttpPost]
+        public IActionResult Logout()
+        {
+            _signInManager.SignOutAsync();
+            _notification.Success("Та амжилттай гарлаа");
+            return RedirectToAction("Index", "Home", new {area = ""});
         }
         
     }
