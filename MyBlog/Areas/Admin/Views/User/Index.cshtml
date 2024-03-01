@@ -17,6 +17,8 @@
                         <th>Овог нэр</th>
                         <th>Нэр</th>
                         <th>Хэрэглэгчийн нэр</th>
+                        <th>Имэйл хаяг</th>
+                        <th>Role</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -27,8 +29,10 @@
                             <td>@user.FirstName</td>
                             <td>@user.LastName</td>
                             <td>@user.UserName</td>
+                            <td>@user.Email</td>
+                            <td>@user.Role</td>
                             <td>
-                                <a class="btn btn-outline-primary">Forget Password</a>
+                                <a class="btn btn-outline-primary" asp-action="ResetPassword" asp-controller="User" asp-route-id="@user.Id">Нууц үг өөрчлөх</a>
                             </td>
                         </tr>
                     }
