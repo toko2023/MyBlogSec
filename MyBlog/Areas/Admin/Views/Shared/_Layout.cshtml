@@ -26,7 +26,8 @@
 
     <!-- Custom styles for this template-->
     <link href="~/dashboard/css/sb-admin-2.min.css" rel="stylesheet">
-
+    <link href="https://cdn.datatables.net/2.0.1/css/dataTables.dataTables.min.css">
+   
 </head>
 
 <body id="page-top">
@@ -176,6 +177,10 @@
     <!-- Page level custom scripts -->
     <script src="~/dashboard/js/demo/chart-area-demo.js"></script>
     <script src="~/dashboard/js/demo/chart-pie-demo.js"></script>
+    <script src="https://cdn.datatables.net/2.0.1/js/dataTables.min.js"></script>
+    <script>
+        let table = new DataTable('#myTable');
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
     @await Component.InvokeAsync("Notyf")
 </body>
