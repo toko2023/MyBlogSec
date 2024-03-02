@@ -8,36 +8,39 @@
     <a class="btn btn-primary mb-1" asp-action="Index" asp-controller="Post">Буцах</a>
     <div class="card">
         <div class="card-header bg-primary">
-            <h4 class="card-title text-white">Хэрэглэгч бүртгэх</h4>
+            <h4 class="card-title text-white">Шинэ нийтлэл</h4>
         </div>
         <div class="card-body">
-            <form asp-action="Register" asp-controller="User" asp-area="Admin">
-                <div class="col-9">
-                    <div class="mb-2">
-                        <label>Title</label>
-                        <input type="text" asp-for="Title" class="form-control" />
-                        <span asp-validation-for="Title" class="text-danger"></span>
+            <form asp-action="Create" asp-controller="Post" asp-area="Admin" enctype="multipart/form-data">
+                <div class="row mb-2">
+                    <div class="col-9">
+                        <div class="mb-2">
+                            <label>Гарчиг</label>
+                            <input type="text" asp-for="Title" class="form-control" />
+                            <span asp-validation-for="Title" class="text-danger"></span>
+                        </div>
+                        <div class="mb-2">
+                            <label>Товч агуулга</label>
+                            <input type="text" asp-for="ShortDescription" class="form-control" />
+                            <span asp-validation-for="ShortDescription" class="text-danger"></span>
+                        </div>
+                        <div class="mb-2">
+                            <label>Агуулга</label>
+                            <textarea asp-for="Description" class="form-control" rows="8"></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
                     </div>
-                    <div class="mb-2">
-                        <label>Short Description</label>
-                        <input type="text" asp-for="ShortDescription" class="form-control" />
-                        <span asp-validation-for="ShortDescription" class="text-danger"></span>
-                    </div>
-                    <div class="mb-2">
-                        <label>Description</label>
-                        <textarea asp-for="Description" class="form-control" rows="8"></textarea>
-                        <span asp-validation-for="Description" class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="col-3">
-                    <div class="mb-2">
-                        <img src="~/thumbnails/default_image.svg" class="img-fluid"/>
-                    </div>
-                    <div class="mb-2">
-                        <label>Description</label>
-                        <input type="file" asp-for="Thumbnail" class="custom-file" />
-                        <textarea asp-for="Description" class="form-control" rows="8"></textarea>
-                        <span asp-validation-for="Description" class="text-danger"></span>
+                    <div class="col-3">
+                        <div class="mb-2">
+                            <img src="~/thumbnails/default_image.svg" class="img-fluid" />
+                        </div>
+                        <div class="mb-2">
+                            <label>Зураг</label>
+                            <div class="mb-3">
+                                <input type="file" asp-for="Thumbnail" class="custom-file"/>
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="mb-2">
