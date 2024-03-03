@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyBlog.Data;
 using MyBlog.Models;
+using MyBlog.Utilites;
 using MyBlog.ViewModels;
 
 namespace MyBlog.Areas.Admin.Controllers
@@ -27,11 +28,33 @@ namespace MyBlog.Areas.Admin.Controllers
             _notification = notyfService;
             _webHostEnvironment = webHostEnvironment;
             _userManager = userManager;
-
         }
-        public IActionResult Index()
+
+        [HttpGet]
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var listOfPosts = new List<Post>();
+
+            var loggedInUser = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == User.Identity!.Name);
+            var loggedInUserRole = await _userManager.GetRolesAsync(loggedInUser!);
+            if(loggedInUserRole[0] == WebsiteRoles.WebsiteAdmin)
+            {
+                listOfPosts = await _context.Posts!.Include(x => x.ApplicationUser).ToListAsync();
+            }
+            else
+            {
+                listOfPosts = await _context.Posts!.Include(x => x.ApplicationUser).Where(x=>x.ApplicationUser!.Id==loggedInUser!.Id).ToListAsync();
+            }
+
+            var listOfPostsVM = listOfPosts.Select(x => new PostVM()
+            {
+                Id = x.Id,
+                Title = x.Title,
+                CreatedDate = x.CreatedDate,
+                ThumbnailUrl = x.ThumbnailUrl,
+                AuthorName = x.ApplicationUser!.FirstName +" "+ x.ApplicationUser.LastName
+            }).ToList();
+            return View(listOfPostsVM);
         }
 
         [HttpGet]
@@ -71,6 +94,23 @@ namespace MyBlog.Areas.Admin.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var post = await _context.Posts!.FirstOrDefaultAsync(X => X.Id == id);
+
+            var loggedInUser = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == User.Identity!.Name);
+            var LoggedInUserRole = await _userManager.GetRolesAsync(loggedInUser!);
+
+            if (LoggedInUserRole[0] == WebsiteRoles.WebsiteAdmin || loggedInUser?.Id == post?.ApplicationUserId)
+            {
+                _context.Posts!.Remove(post!);
+                await _context.SaveChangesAsync();
+                _notification.Success("Нийтлэлийг амжилттай устгалаа.");
+                return RedirectToAction("Index", "Post", new { area = "Admin" });
+            }
+            return View();
+        }
         private string UploadImage(IFormFile file)
         {
             string uniqueFileName = "";
